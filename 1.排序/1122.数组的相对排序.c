@@ -20,7 +20,7 @@ int arr1[1005], arr2[1005];
 
 void sort_insert(int *data, int dataSize) {
     for (int i = 1; i < dataSize; i++) {
-        for (int j = i + 1; j > 0 && (data[j] < data[j - 1]); j--) {
+        for (int j = i; j > 0 && (data[j] < data[j - 1]); j--) {
             swap(data[j], data[j - 1]);
         }
     }
@@ -29,22 +29,26 @@ void sort_insert(int *data, int dataSize) {
 int* relativeSortArray(int* arr1, int arr1Size, int* arr2, int arr2Size, int* returnSize){
     (*returnSize) = 0;
     int *data = (int *)malloc(sizeof(int) * arr1Size);
-    int *tmpf = (int *)calloc(arr1Size, sizeof(int));
-    int *tmpb = (int *)malloc(sizeof(int) * arr1Size);
+    int *tmpf = (int *)calloc(1005, sizeof(int));
+    int *tmpb = (int *)calloc(1005, sizeof(int));
     
-    for (int i = 0; i < arr1Size; i++) {
-        tmpf[arr1[i]] += 1;
-    }
+    for (int i = 0; i < arr1Size; i++) tmpf[arr1[i]] += 1;
+    
     for (int i = 0; i < arr2Size; i++) {
         for (int j = 0; j < tmpf[arr2[i]]; j++) {
             data[(*returnSize)++] = arr2[i];
         }
         tmpf[arr2[i]] = 0;
     }
-    for (int i = 0; i < n; i++) {
-        
+    int ans = 0;
+    for (int i = 0; i <= 1000; i++) {
+        if (tmpf[i] == 0) continue;
+        for (int j = 0; j < tmpf[i]; j++) {
+            tmpb[ans++] = i;
+        }
     }
-    
+    sort_insert(tmpb, ans);
+    for (int i = (*returnSize), j = 0; i < arr1Size; i++) data[(*returnSize)++] = tmpb[j++]; 
     return data;
 }
 
@@ -61,7 +65,6 @@ int main() {
         scanf("%d", &arr2[i]);
     }
     int *data = relativeSortArray(arr1, n, arr2, m, &returnSize);
-    printf("returnSize : %d\n", returnSize);
     for (int i = 0; i < returnSize; i++) {
         i && printf(" ");
         printf("%d", data[i]);
