@@ -15,10 +15,13 @@
 int findString(char** words, int wordsSize, char* s){
     int l = 0, r = wordsSize - 1, mid;
     while(l <= r) {
+        while(strlen(words[l]) == 0) l++;
+        while(strlen(words[r]) == 0) r--;
         mid = (l + r) >> 1;
-        while (words[mid] == "") mid += 1;
-        if (words[mid] == s) return mid;
-        if (words[mid] < s) l = mid + 1;
+        while(strlen(words[mid]) == 0) mid -= 1;
+        int flag = strcmp(words[mid], s);
+        if(flag == 0) return mid;
+        if (flag < 0) l = mid + 1;
         else r = mid - 1;
     }
     return -1;
